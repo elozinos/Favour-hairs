@@ -40,6 +40,12 @@ class Product(db.Model):
         default=dict
     )
 
+    featured = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+
 
 class Category(db.Model):
 
