@@ -202,11 +202,16 @@
         }
 
 
-        .logout-btn{
-            margin-top:25px;
+        .website-btn{
+            margin-top:15px;
             border-top:1px solid rgba(255,255,255,.2) !important;
             padding-top:18px !important;
             border-radius:0 !important;
+        }
+
+
+        .logout-btn{
+            margin-top:0;
         }
 
 
@@ -327,6 +332,161 @@
 
         .primary-btn:hover{
             background:#843966;
+        }
+
+
+        /* ==============================
+           FEATURED PRODUCTS
+        ============================== */
+
+        .featured-manager{
+            background:white;
+            border-radius:12px;
+            padding:22px;
+            margin-bottom:25px;
+            box-shadow:0 5px 20px rgba(92,39,72,.08);
+        }
+
+
+        .featured-manager-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:20px;
+            margin-bottom:18px;
+        }
+
+
+        .featured-manager-header h3{
+            color:#5C2748;
+            font-family:Georgia,serif;
+            margin-bottom:6px;
+        }
+
+
+        .featured-manager-header p{
+            color:#777;
+            font-size:13px;
+            line-height:1.5;
+        }
+
+
+        .featured-count{
+            background:#F0E3EA;
+            color:#5C2748;
+            padding:7px 12px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
+            white-space:nowrap;
+        }
+
+
+        .featured-products-list{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:15px;
+        }
+
+
+        .featured-product-card{
+            border:1px solid #eee;
+            border-radius:10px;
+            overflow:hidden;
+            background:#fff;
+        }
+
+
+        .featured-product-card img{
+            width:100%;
+            height:150px;
+            object-fit:cover;
+            display:block;
+        }
+
+
+        .featured-product-info{
+            padding:14px;
+        }
+
+
+        .featured-product-info h4{
+            color:#5C2748;
+            margin-bottom:6px;
+            font-size:15px;
+        }
+
+
+        .featured-product-info p{
+            color:#777;
+            font-size:13px;
+            margin-bottom:12px;
+        }
+
+
+        .featured-remove-btn{
+            width:100%;
+            border:none;
+            background:#eee;
+            color:#8b0000;
+            padding:9px;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:12px;
+        }
+
+
+        .featured-remove-btn:hover{
+            background:#fbeaea;
+        }
+
+
+        .featured-empty{
+            grid-column:1 / -1;
+            text-align:center;
+            padding:25px;
+            background:#F8F1F4;
+            border-radius:8px;
+            color:#777;
+            font-size:14px;
+        }
+
+
+        .feature-action-btn{
+            border:none;
+            padding:7px 10px;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:12px;
+            margin-top:7px;
+        }
+
+
+        .feature-btn{
+            background:#5C2748;
+            color:white;
+        }
+
+
+        .feature-btn:hover{
+            background:#843966;
+        }
+
+
+        .unfeature-btn{
+            background:#eee;
+            color:#8b0000;
+        }
+
+
+        .unfeature-btn:hover{
+            background:#fbeaea;
+        }
+
+
+        .feature-action-btn:disabled{
+            opacity:.6;
+            cursor:not-allowed;
         }
 
 
@@ -767,6 +927,10 @@
                 grid-template-columns:repeat(2,1fr);
             }
 
+            .featured-products-list{
+                grid-template-columns:repeat(2,1fr);
+            }
+
         }
 
 
@@ -786,6 +950,10 @@
             }
 
             .booking-info{
+                grid-template-columns:1fr;
+            }
+
+            .featured-products-list{
                 grid-template-columns:1fr;
             }
 
@@ -831,6 +999,10 @@
             .dashboard-header{
                 align-items:flex-start;
                 gap:15px;
+                flex-direction:column;
+            }
+
+            .featured-manager-header{
                 flex-direction:column;
             }
 
@@ -987,6 +1159,15 @@
 
                 <li>
                     <button
+                        class="website-btn"
+                        onclick="window.location.href='index.html'"
+                    >
+                        Back to Website
+                    </button>
+                </li>
+
+                <li>
+                    <button
                         class="logout-btn"
                         onclick="logoutAdmin()"
                     >
@@ -1075,6 +1256,54 @@
                     >
                         Add Product
                     </button>
+
+                </div>
+
+
+                <!-- ==============================
+                     FEATURED PRODUCTS MANAGEMENT
+                ============================== -->
+
+                <div class="featured-manager">
+
+                    <div class="featured-manager-header">
+
+                        <div>
+
+                            <h3>
+                                Featured Products
+                            </h3>
+
+                            <p>
+                                Choose up to 3 products to appear
+                                immediately below the homepage hero.
+                                These are the products you want to
+                                push and sell quickly.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="featured-count"
+                            id="featuredCount"
+                        >
+                            0 / 3 Featured
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="featured-products-list"
+                        id="featuredProductsList"
+                    >
+
+                        <div class="featured-empty">
+                            No featured products selected yet.
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -2211,6 +2440,8 @@
 
                 displayProducts();
 
+                displayFeaturedProducts();
+
                 displayCategories();
 
                 displayOrders();
@@ -2355,6 +2586,8 @@
 
                 `;
 
+                displayFeaturedProducts();
+
                 return;
 
             }
@@ -2413,9 +2646,34 @@
 
 
                             <td>
+
                                 <span class="featured-badge ${product.featured ? "yes" : "no"}">
                                     ${product.featured ? "Featured" : "Not Featured"}
                                 </span>
+
+
+                                <br>
+
+
+                                <button
+                                    class="feature-action-btn ${
+                                        product.featured
+                                        ?
+                                        "unfeature-btn"
+                                        :
+                                        "feature-btn"
+                                    }"
+                                    onclick="toggleFeatured('${product.id}')"
+                                >
+                                    ${
+                                        product.featured
+                                        ?
+                                        "Remove Featured"
+                                        :
+                                        "Feature Product"
+                                    }
+                                </button>
+
                             </td>
 
 
@@ -2443,6 +2701,238 @@
                     `;
 
                 }).join("");
+
+
+            displayFeaturedProducts();
+
+        }
+
+
+
+        function displayFeaturedProducts(){
+
+            const container =
+                document.getElementById(
+                    "featuredProductsList"
+                );
+
+
+            const countElement =
+                document.getElementById(
+                    "featuredCount"
+                );
+
+
+            if(!container || !countElement){
+
+                return;
+
+            }
+
+
+            const featuredProducts =
+                products.filter(
+                    product =>
+                        product.featured === true
+                );
+
+
+            countElement.textContent =
+                `${featuredProducts.length} / 3 Featured`;
+
+
+            if(!featuredProducts.length){
+
+                container.innerHTML = `
+
+                    <div class="featured-empty">
+
+                        No featured products selected yet.
+
+                        <br>
+
+                        Use "Feature Product" below to choose
+                        products for the homepage.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            container.innerHTML =
+                featuredProducts
+                    .map(product => {
+
+                        const image =
+                            product.images &&
+                            product.images.length
+                            ?
+                            getImageUrl(
+                                product.images[0]
+                            )
+                            :
+                            "";
+
+
+                        return `
+
+                            <div class="featured-product-card">
+
+                                ${
+                                    image
+                                    ?
+                                    `<img
+                                        src="${image}"
+                                        alt="${product.name}"
+                                    >`
+                                    :
+                                    `<div
+                                        style="
+                                            height:150px;
+                                            background:#F8F1F4;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            color:#777;
+                                        "
+                                    >
+                                        No image
+                                    </div>`
+                                }
+
+
+                                <div class="featured-product-info">
+
+                                    <h4>
+                                        ${product.name}
+                                    </h4>
+
+
+                                    <p>
+                                        ₦${Number(
+                                            product.price
+                                        ).toLocaleString()}
+                                    </p>
+
+
+                                    <button
+                                        class="featured-remove-btn"
+                                        onclick="toggleFeatured('${product.id}')"
+                                    >
+                                        Remove from Featured
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    })
+                    .join("");
+
+        }
+
+
+
+        async function toggleFeatured(
+            id
+        ){
+
+            const product =
+                products.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!product){
+
+                return;
+
+            }
+
+
+            const currentlyFeatured =
+                product.featured === true;
+
+
+            if(
+                !currentlyFeatured &&
+                products.filter(
+                    item =>
+                        item.featured === true
+                ).length >= 3
+            ){
+
+                alert(
+                    "You can only have 3 featured products on the homepage. Remove one featured product before adding another."
+                );
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/products/${encodeURIComponent(id)}`,
+                        {
+                            method:"PUT",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    featured:
+                                        !currentlyFeatured
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update featured product."
+                    );
+
+                }
+
+
+                await loadProductsFromAPI();
+
+
+                displayProducts();
+
+                updateDashboard();
+
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while updating the featured product."
+                );
+
+            }
 
         }
 
@@ -3142,6 +3632,8 @@
 
                         displayProducts();
 
+                        displayFeaturedProducts();
+
                         updateCategoryDropdown();
 
                         updateDashboard();
@@ -3248,6 +3740,8 @@
 
 
                 displayProducts();
+
+                displayFeaturedProducts();
 
                 updateDashboard();
 
@@ -3756,6 +4250,8 @@
 
                         displayProducts();
 
+                        displayFeaturedProducts();
+
                         updateDashboard();
 
 
@@ -3866,6 +4362,8 @@
                 updateCategoryDropdown();
 
                 displayProducts();
+
+                displayFeaturedProducts();
 
                 updateDashboard();
 
@@ -5445,6 +5943,8 @@
 
 
             displayProducts();
+
+            displayFeaturedProducts();
 
             displayCategories();
 
