@@ -40,6 +40,8 @@ app.secret_key = os.environ.get(
     "FLASK_SECRET_KEY",
     "favour-hairs-development-secret-key"
 )
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_COOKIE_SECURE"] = True
 
 
 # ============================================================
