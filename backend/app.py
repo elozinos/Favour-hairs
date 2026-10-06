@@ -21,7 +21,7 @@ from models import (
 )
 
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 
@@ -36,36 +36,83 @@ app = Flask(__name__)
 # APP SETTINGS
 # ============================================================
 
-app.secret_key = os.environ.get(
-    "FLASK_SECRET_KEY",
-    "favour-hairs-development-secret-key"
+FLASK_SECRET_KEY = os.environ.get(
+    "FLASK_SECRET_KEY"
 )
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
+
+ADMIN_USERNAME = os.environ.get(
+    "ADMIN_USERNAME"
+)
+
+ADMIN_PASSWORD = os.environ.get(
+    "ADMIN_PASSWORD"
+)
+
+FRONTEND_URL = os.environ.get(
+    "FRONTEND_URL"
+)
+
+
+if not FLASK_SECRET_KEY:
+    raise RuntimeError(
+        "FLASK_SECRET_KEY environment variable is required."
+    )
+
+if not ADMIN_USERNAME:
+    raise RuntimeError(
+        "ADMIN_USERNAME environment variable is required."
+    )
+
+if not ADMIN_PASSWORD:
+    raise RuntimeError(
+        "ADMIN_PASSWORD environment variable is required."
+    )
+
+if not FRONTEND_URL:
+    raise RuntimeError(
+        "FRONTEND_URL environment variable is required."
+    )
+
+
+app.secret_key = FLASK_SECRET_KEY
+
+
+# ============================================================
+# SESSION SECURITY
+# ============================================================
+
+app.config["SESSION_COOKIE_NAME"] = (
+    "favour_hairs_admin_session"
+)
+
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+
 app.config["SESSION_COOKIE_SECURE"] = True
+
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+
+app.config["PERMANENT_SESSION_LIFETIME"] = (
+    timedelta(hours=8)
+)
+
+app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
 
 # ============================================================
 # CORS
 # ============================================================
 
+allowed_origins = [
+    origin.strip().rstrip("/")
+    for origin in FRONTEND_URL.split(",")
+    if origin.strip()
+]
+
+
 CORS(
     app,
+    origins=allowed_origins,
     supports_credentials=True
-)
-
-
-# ============================================================
-# ADMIN SETTINGS
-# ============================================================
-
-ADMIN_USERNAME = os.environ.get(
-    "ADMIN_USERNAME",
-    "admin"
-)
-
-ADMIN_PASSWORD = os.environ.get(
-    "ADMIN_PASSWORD",
-    "admin123"
 )
 
 
@@ -209,6 +256,32 @@ def admin_required():
     return None
 
 
+def admin_origin_required():
+
+    auth_error = admin_required()
+
+    if auth_error:
+        return auth_error
+
+    origin = request.headers.get(
+        "Origin"
+    )
+
+    if origin:
+
+        normalized_origin = (
+            origin.rstrip("/")
+        )
+
+        if normalized_origin not in allowed_origins:
+
+            return jsonify({
+                "error": "Invalid request origin."
+            }), 403
+
+    return None
+
+
 def product_data(product):
 
     return {
@@ -335,6 +408,10 @@ def admin_login():
             "error": "Invalid username or password."
         }), 401
 
+    session.clear()
+
+    session.permanent = True
+
     session[
         "admin_logged_in"
     ] = True
@@ -369,7 +446,8 @@ def admin_logout():
     session.clear()
 
     return jsonify({
-        "message": "Logout successful."
+        "message": "Logout successful.",
+        "authenticated": False
     })
 
 
@@ -431,7 +509,7 @@ def uploaded_file(filename):
 )
 def upload_file():
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -601,7 +679,7 @@ def get_product(product_id):
 )
 def create_product():
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -689,7 +767,7 @@ def create_product():
 )
 def update_product(product_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -757,7 +835,7 @@ def update_product(product_id):
 )
 def delete_product(product_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -807,7 +885,7 @@ def get_categories():
 )
 def create_category():
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -876,7 +954,7 @@ def create_category():
 )
 def update_category(category_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -918,7 +996,7 @@ def update_category(category_id):
 )
 def delete_category(category_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1069,7 +1147,7 @@ def create_order():
 )
 def update_order(order_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1111,7 +1189,7 @@ def update_order(order_id):
 )
 def delete_order(order_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1261,7 +1339,7 @@ def create_booking():
 )
 def update_booking(booking_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1303,7 +1381,7 @@ def update_booking(booking_id):
 )
 def delete_booking(booking_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1508,7 +1586,7 @@ def create_review():
 )
 def update_review(review_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1597,7 +1675,7 @@ def update_review(review_id):
 )
 def delete_review(review_id):
 
-    auth_error = admin_required()
+    auth_error = admin_origin_required()
 
     if auth_error:
         return auth_error
@@ -1631,8 +1709,6 @@ with app.app_context():
 
     db.create_all()
 
-    # Add the featured column to an existing database
-    # if it does not already exist.
     inspector = inspect(db.engine)
 
     product_columns = {
