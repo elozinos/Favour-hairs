@@ -1,0 +1,5472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin | Favour Hairs</title>
+
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+
+        body{
+            font-family:Arial,sans-serif;
+            background:#F8F1F4;
+            color:#333;
+        }
+
+
+        /* ==============================
+           LOGIN
+        ============================== */
+
+        .login-screen{
+            position:fixed;
+            inset:0;
+            background:#F8F1F4;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+            z-index:5000;
+        }
+
+
+        .login-screen.hidden{
+            display:none;
+        }
+
+
+        .login-box{
+            width:100%;
+            max-width:420px;
+            background:white;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 10px 40px rgba(92,39,72,.15);
+        }
+
+
+        .login-box h1{
+            font-family:Georgia,serif;
+            color:#5C2748;
+            text-align:center;
+            margin-bottom:10px;
+        }
+
+
+        .login-box p{
+            text-align:center;
+            color:#777;
+            margin-bottom:30px;
+        }
+
+
+        .login-group{
+            margin-bottom:18px;
+        }
+
+
+        .login-group label{
+            display:block;
+            margin-bottom:7px;
+            color:#5C2748;
+            font-weight:bold;
+            font-size:14px;
+        }
+
+
+        .login-group input{
+            width:100%;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:7px;
+            font-family:inherit;
+            font-size:15px;
+        }
+
+
+        .login-btn{
+            width:100%;
+            padding:13px;
+            border:none;
+            border-radius:7px;
+            background:#5C2748;
+            color:white;
+            cursor:pointer;
+            font-size:15px;
+            margin-top:5px;
+        }
+
+
+        .login-btn:hover{
+            background:#843966;
+        }
+
+
+        .login-btn:disabled{
+            opacity:.6;
+            cursor:not-allowed;
+        }
+
+
+        .login-error{
+            color:#8b0000;
+            background:#fbeaea;
+            padding:10px;
+            border-radius:6px;
+            margin-bottom:15px;
+            font-size:13px;
+            display:none;
+        }
+
+
+        .login-error.show{
+            display:block;
+        }
+
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .admin-app{
+            display:none;
+        }
+
+
+        .admin-app.visible{
+            display:block;
+        }
+
+
+        .sidebar{
+            position:fixed;
+            top:0;
+            left:0;
+            width:240px;
+            height:100vh;
+            background:#5C2748;
+            color:white;
+            padding:30px 20px;
+        }
+
+
+        .sidebar h2{
+            font-family:Georgia,serif;
+            text-align:center;
+            margin-bottom:30px;
+            font-size:25px;
+        }
+
+
+        .sidebar ul{
+            list-style:none;
+        }
+
+
+        .sidebar li{
+            margin-bottom:10px;
+        }
+
+
+        .sidebar button{
+            width:100%;
+            border:none;
+            background:transparent;
+            color:white;
+            text-align:left;
+            padding:14px 15px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:15px;
+        }
+
+
+        .sidebar button:hover,
+        .sidebar button.active{
+            background:#843966;
+        }
+
+
+        .logout-btn{
+            margin-top:25px;
+            border-top:1px solid rgba(255,255,255,.2) !important;
+            padding-top:18px !important;
+            border-radius:0 !important;
+        }
+
+
+        .main{
+            margin-left:240px;
+            padding:35px;
+        }
+
+
+        .section{
+            display:none;
+        }
+
+
+        .section.active{
+            display:block;
+        }
+
+
+        .page-title{
+            font-family:Georgia,serif;
+            font-size:30px;
+            color:#5C2748;
+            margin-bottom:25px;
+        }
+
+
+        .dashboard-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+
+        .dashboard-header .page-title{
+            margin-bottom:0;
+        }
+
+
+        .refresh-btn{
+            background:white;
+            color:#5C2748;
+            border:1px solid #5C2748;
+            padding:11px 18px;
+            border-radius:7px;
+            cursor:pointer;
+            font-size:14px;
+        }
+
+
+        .refresh-btn:hover{
+            background:#5C2748;
+            color:white;
+        }
+
+
+        .refresh-btn:disabled{
+            opacity:.6;
+            cursor:not-allowed;
+        }
+
+
+        .stats{
+            display:grid;
+            grid-template-columns:repeat(5,1fr);
+            gap:20px;
+            margin-bottom:35px;
+        }
+
+
+        .stat-card{
+            background:white;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 5px 20px rgba(92,39,72,.08);
+        }
+
+
+        .stat-card h3{
+            color:#777;
+            font-size:14px;
+            margin-bottom:10px;
+        }
+
+
+        .stat-card p{
+            color:#5C2748;
+            font-size:28px;
+            font-weight:bold;
+        }
+
+
+        .section-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+
+
+        .section-header h2{
+            color:#5C2748;
+            font-family:Georgia,serif;
+        }
+
+
+        .primary-btn{
+            background:#5C2748;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:7px;
+            cursor:pointer;
+            font-size:14px;
+        }
+
+
+        .primary-btn:hover{
+            background:#843966;
+        }
+
+
+        .table-container{
+            background:white;
+            border-radius:12px;
+            overflow-x:auto;
+            box-shadow:0 5px 20px rgba(92,39,72,.08);
+        }
+
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:750px;
+        }
+
+
+        th,
+        td{
+            padding:15px;
+            text-align:left;
+            border-bottom:1px solid #eee;
+        }
+
+
+        th{
+            background:#F8F1F4;
+            color:#5C2748;
+            font-size:14px;
+        }
+
+
+        td{
+            font-size:14px;
+        }
+
+
+        .product-thumb{
+            width:60px;
+            height:60px;
+            object-fit:cover;
+            border-radius:8px;
+        }
+
+
+        .action-btn{
+            border:none;
+            padding:8px 12px;
+            border-radius:5px;
+            cursor:pointer;
+            margin-right:5px;
+            font-size:12px;
+        }
+
+
+        .edit-btn{
+            background:#5C2748;
+            color:white;
+        }
+
+
+        .delete-btn{
+            background:#eee;
+            color:#8b0000;
+        }
+
+
+        .view-btn{
+            background:#843966;
+            color:white;
+        }
+
+
+        select.status-select{
+            padding:7px;
+            border:1px solid #ddd;
+            border-radius:5px;
+        }
+
+
+        .categories-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:25px;
+        }
+
+
+        .category-card{
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 5px 20px rgba(92,39,72,.08);
+        }
+
+
+        .category-card img{
+            width:100%;
+            height:180px;
+            object-fit:cover;
+        }
+
+
+        .category-content{
+            padding:18px;
+        }
+
+
+        .category-content h3{
+            color:#5C2748;
+            margin-bottom:15px;
+        }
+
+
+        .modal{
+            display:none;
+            position:fixed;
+            z-index:1000;
+            inset:0;
+            background:rgba(0,0,0,.55);
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+        }
+
+
+        .modal.active{
+            display:flex;
+        }
+
+
+        .modal-content{
+            background:white;
+            width:100%;
+            max-width:650px;
+            max-height:90vh;
+            overflow-y:auto;
+            border-radius:12px;
+            padding:30px;
+            position:relative;
+        }
+
+
+        .modal-content h2{
+            color:#5C2748;
+            font-family:Georgia,serif;
+            margin-bottom:25px;
+        }
+
+
+        .close-btn{
+            position:absolute;
+            top:15px;
+            right:20px;
+            border:none;
+            background:none;
+            font-size:25px;
+            cursor:pointer;
+            color:#555;
+        }
+
+
+        .form-group{
+            margin-bottom:18px;
+        }
+
+
+        .form-group label{
+            display:block;
+            margin-bottom:7px;
+            color:#5C2748;
+            font-weight:bold;
+            font-size:14px;
+        }
+
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select{
+            width:100%;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:7px;
+            font-family:inherit;
+        }
+
+
+        .form-group textarea{
+            min-height:100px;
+            resize:vertical;
+        }
+
+
+        .featured-toggle{
+            display:flex !important;
+            align-items:center;
+            gap:10px;
+            color:#444 !important;
+            font-weight:normal !important;
+            cursor:pointer;
+        }
+
+
+        .featured-toggle input{
+            width:18px;
+            height:18px;
+            accent-color:#5C2748;
+            cursor:pointer;
+        }
+
+
+        .featured-badge{
+            display:inline-block;
+            padding:5px 9px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
+        }
+
+
+        .featured-badge.yes{
+            background:#F0E3EA;
+            color:#5C2748;
+        }
+
+
+        .featured-badge.no{
+            background:#eee;
+            color:#777;
+        }
+
+
+        .form-actions{
+            display:flex;
+            gap:10px;
+            margin-top:20px;
+        }
+
+
+        .secondary-btn{
+            background:#eee;
+            color:#333;
+            border:none;
+            padding:12px 20px;
+            border-radius:7px;
+            cursor:pointer;
+        }
+
+
+        .image-preview-container{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:12px;
+        }
+
+
+        .preview-item{
+            position:relative;
+            width:100px;
+            height:100px;
+        }
+
+
+        .preview-item img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            border-radius:7px;
+        }
+
+
+        .remove-image{
+            position:absolute;
+            top:3px;
+            right:3px;
+            width:22px;
+            height:22px;
+            border:none;
+            border-radius:50%;
+            background:#5C2748;
+            color:white;
+            cursor:pointer;
+        }
+
+
+        .category-image-preview{
+            margin-top:12px;
+            width:140px;
+            height:140px;
+            border-radius:10px;
+            overflow:hidden;
+            background:#F8F1F4;
+            display:none;
+        }
+
+
+        .category-image-preview img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+
+        .spec-row{
+            display:grid;
+            grid-template-columns:1fr 1fr auto;
+            gap:10px;
+            margin-bottom:10px;
+        }
+
+
+        .spec-row input{
+            padding:10px;
+            border:1px solid #ddd;
+            border-radius:6px;
+        }
+
+
+        .remove-spec{
+            border:none;
+            background:#eee;
+            color:#8b0000;
+            padding:8px 10px;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+
+        .booking-info{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:15px;
+            margin-bottom:20px;
+        }
+
+
+        .info-box{
+            background:#F8F1F4;
+            padding:15px;
+            border-radius:8px;
+        }
+
+
+        .info-box strong{
+            display:block;
+            color:#5C2748;
+            margin-bottom:5px;
+            font-size:13px;
+        }
+
+
+        .info-box span{
+            color:#444;
+            word-break:break-word;
+        }
+
+
+        .booking-note{
+            background:#F8F1F4;
+            padding:15px;
+            border-radius:8px;
+            margin-bottom:20px;
+        }
+
+
+        .booking-note strong{
+            display:block;
+            color:#5C2748;
+            margin-bottom:8px;
+        }
+
+
+        .inspiration-section{
+            margin-top:20px;
+        }
+
+
+        .inspiration-section h3{
+            color:#5C2748;
+            margin-bottom:12px;
+        }
+
+
+        .inspiration-image{
+            width:100%;
+            max-height:400px;
+            object-fit:contain;
+            border-radius:10px;
+            background:#F8F1F4;
+            display:block;
+        }
+
+
+        .no-image{
+            background:#F8F1F4;
+            padding:25px;
+            border-radius:8px;
+            color:#777;
+            text-align:center;
+        }
+
+
+        .review-stars{
+            color:#843966;
+            font-size:18px;
+            white-space:nowrap;
+        }
+
+
+        .review-comment{
+            max-width:350px;
+            line-height:1.5;
+            word-break:break-word;
+        }
+
+
+        .review-date{
+            color:#777;
+            white-space:nowrap;
+        }
+
+
+        .empty-state{
+            text-align:center;
+            padding:40px;
+            color:#777;
+        }
+
+
+        @media(max-width:1100px){
+
+            .stats{
+                grid-template-columns:repeat(3,1fr);
+            }
+
+            .categories-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+
+        }
+
+
+        @media(max-width:800px){
+
+            .sidebar{
+                width:190px;
+            }
+
+            .main{
+                margin-left:190px;
+                padding:20px;
+            }
+
+            .stats{
+                grid-template-columns:repeat(2,1fr);
+            }
+
+            .booking-info{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+
+        @media(max-width:600px){
+
+            .sidebar{
+                position:static;
+                width:100%;
+                height:auto;
+            }
+
+            .sidebar h2{
+                margin-bottom:20px;
+            }
+
+            .sidebar ul{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:5px;
+            }
+
+            .main{
+                margin-left:0;
+            }
+
+            .stats{
+                grid-template-columns:1fr;
+            }
+
+            .categories-grid{
+                grid-template-columns:1fr;
+            }
+
+            .section-header{
+                align-items:flex-start;
+                gap:15px;
+                flex-direction:column;
+            }
+
+            .dashboard-header{
+                align-items:flex-start;
+                gap:15px;
+                flex-direction:column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==============================
+         LOGIN SCREEN
+    ============================== -->
+
+    <div
+        class="login-screen"
+        id="loginScreen"
+    >
+
+        <div class="login-box">
+
+            <h1>
+                Favour Hairs
+            </h1>
+
+            <p>
+                Admin Login
+            </p>
+
+
+            <div
+                class="login-error"
+                id="loginError"
+            ></div>
+
+
+            <form id="loginForm">
+
+                <div class="login-group">
+
+                    <label for="loginUsername">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="loginUsername"
+                        required
+                        autocomplete="username"
+                    >
+
+                </div>
+
+
+                <div class="login-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        required
+                        autocomplete="current-password"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginButton"
+                >
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==============================
+         ADMIN APPLICATION
+    ============================== -->
+
+    <div
+        class="admin-app"
+        id="adminApp"
+    >
+
+
+        <aside class="sidebar">
+
+            <h2>Favour Hairs</h2>
+
+            <ul>
+
+                <li>
+                    <button
+                        class="active"
+                        onclick="showSection('dashboard',this)"
+                    >
+                        Dashboard
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        onclick="showSection('products',this)"
+                    >
+                        Products
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        onclick="showSection('orders',this)"
+                    >
+                        Orders
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        onclick="showSection('bookings',this)"
+                    >
+                        Bookings
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        onclick="showSection('reviews',this)"
+                    >
+                        Reviews
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        onclick="showSection('categories',this)"
+                    >
+                        Categories
+                    </button>
+                </li>
+
+                <li>
+                    <button
+                        class="logout-btn"
+                        onclick="logoutAdmin()"
+                    >
+                        Logout
+                    </button>
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+        <main class="main">
+
+
+            <section
+                id="dashboard"
+                class="section active"
+            >
+
+                <div class="dashboard-header">
+
+                    <h1 class="page-title">
+                        Dashboard
+                    </h1>
+
+                    <button
+                        class="refresh-btn"
+                        onclick="refreshAdminData()"
+                    >
+                        Refresh Data
+                    </button>
+
+                </div>
+
+
+                <div class="stats">
+
+                    <div class="stat-card">
+                        <h3>Products</h3>
+                        <p id="productCount">0</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <h3>Orders</h3>
+                        <p id="orderCount">0</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <h3>Bookings</h3>
+                        <p id="bookingCount">0</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <h3>Reviews</h3>
+                        <p id="reviewCount">0</p>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <h3>Categories</h3>
+                        <p id="categoryCount">0</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="products"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>Products</h2>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openProductModal()"
+                    >
+                        Add Product
+                    </button>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Featured</th>
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="productsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="orders"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>Orders</h2>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="ordersTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="bookings"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>Bookings</h2>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Booking ID</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="bookingsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="reviews"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>Reviews</h2>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Product</th>
+                                <th>Customer</th>
+                                <th>Rating</th>
+                                <th>Review</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="reviewsTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="categories"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>Categories</h2>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openCategoryModal()"
+                    >
+                        Add Category
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="categories-grid"
+                    id="categoriesGrid"
+                ></div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ==============================
+         PRODUCT MODAL
+    ============================== -->
+
+    <div
+        class="modal"
+        id="productModal"
+    >
+
+        <div class="modal-content">
+
+            <button
+                class="close-btn"
+                onclick="closeProductModal()"
+            >
+                &times;
+            </button>
+
+
+            <h2 id="productModalTitle">
+                Add Product
+            </h2>
+
+
+            <form id="productForm">
+
+                <input
+                    type="hidden"
+                    id="editingProductId"
+                >
+
+
+                <div class="form-group">
+
+                    <label for="productName">
+                        Product Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="productName"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="productPrice">
+                        Price
+                    </label>
+
+                    <input
+                        type="number"
+                        id="productPrice"
+                        min="0"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="productCategory">
+                        Category
+                    </label>
+
+                    <select
+                        id="productCategory"
+                        required
+                    ></select>
+
+                </div>
+
+
+                <div class="form-group featured-group">
+
+                    <label>
+                        Featured Product
+                    </label>
+
+                    <label class="featured-toggle">
+                        <input
+                            type="checkbox"
+                            id="productFeatured"
+                        >
+                        <span>Show this product as featured</span>
+                    </label>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="productDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="productDescription"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="productImages">
+                        Product Images
+                    </label>
+
+                    <input
+                        type="file"
+                        id="productImages"
+                        accept="image/*"
+                        multiple
+                    >
+
+                    <div
+                        class="image-preview-container"
+                        id="imagePreviewContainer"
+                    ></div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Specifications
+                    </label>
+
+                    <div id="specificationsContainer"></div>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="addSpecification()"
+                    >
+                        Add Specification
+                    </button>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Save Product
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="closeProductModal()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==============================
+         CATEGORY MODAL
+    ============================== -->
+
+    <div
+        class="modal"
+        id="categoryModal"
+    >
+
+        <div class="modal-content">
+
+            <button
+                class="close-btn"
+                onclick="closeCategoryModal()"
+            >
+                &times;
+            </button>
+
+
+            <h2 id="categoryModalTitle">
+                Add Category
+            </h2>
+
+
+            <form id="categoryForm">
+
+                <input
+                    type="hidden"
+                    id="editingCategoryId"
+                >
+
+
+                <div class="form-group">
+
+                    <label for="categoryName">
+                        Category Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="categoryName"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="categoryImage">
+                        Category Image
+                    </label>
+
+                    <input
+                        type="file"
+                        id="categoryImage"
+                        accept="image/*"
+                    >
+
+
+                    <div
+                        class="category-image-preview"
+                        id="categoryImagePreview"
+                    >
+
+                        <img
+                            id="categoryPreviewImage"
+                            src=""
+                            alt="Category preview"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Save Category
+                    </button>
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="closeCategoryModal()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==============================
+         ORDER MODAL
+    ============================== -->
+
+    <div
+        class="modal"
+        id="orderModal"
+    >
+
+        <div class="modal-content">
+
+            <button
+                class="close-btn"
+                onclick="closeOrderModal()"
+            >
+                &times;
+            </button>
+
+
+            <h2>
+                Order Details
+            </h2>
+
+
+            <div id="orderDetails"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==============================
+         BOOKING MODAL
+    ============================== -->
+
+    <div
+        class="modal"
+        id="bookingModal"
+    >
+
+        <div class="modal-content">
+
+            <button
+                class="close-btn"
+                onclick="closeBookingModal()"
+            >
+                &times;
+            </button>
+
+
+            <h2>
+                Booking Details
+            </h2>
+
+
+            <div id="bookingDetails"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        const API_BASE = "https://favour-hairs-back.onrender.com/api";
+
+
+        const API_ORIGIN =
+            "http://127.0.0.1:5000";
+
+
+        let products = [];
+
+        let categories = [];
+
+        let orders = [];
+
+        let bookings = [];
+
+        let reviews = [];
+
+
+        let pendingProductFiles = [];
+
+        let pendingCategoryFile = null;
+
+        let categoryImageData = "";
+
+
+
+        /* ==============================
+           API HELPER
+        ============================== */
+
+        async function apiFetch(
+            url,
+            options = {}
+        ){
+
+            return fetch(
+                url,
+                {
+                    ...options,
+                    credentials:"include"
+                }
+            );
+
+        }
+
+
+
+        /* ==============================
+           LOGIN
+        ============================== */
+
+        document
+            .getElementById("loginForm")
+            .addEventListener(
+                "submit",
+                async function(event){
+
+                    event.preventDefault();
+
+
+                    const username =
+                        document
+                            .getElementById(
+                                "loginUsername"
+                            )
+                            .value
+                            .trim();
+
+
+                    const password =
+                        document
+                            .getElementById(
+                                "loginPassword"
+                            )
+                            .value;
+
+
+                    const button =
+                        document.getElementById(
+                            "loginButton"
+                        );
+
+
+                    const errorBox =
+                        document.getElementById(
+                            "loginError"
+                        );
+
+
+                    errorBox.classList.remove(
+                        "show"
+                    );
+
+
+                    button.disabled =
+                        true;
+
+                    button.textContent =
+                        "Logging in...";
+
+
+                    try{
+
+                        const response =
+                            await apiFetch(
+                                `${API_BASE}/admin/login`,
+                                {
+                                    method:"POST",
+
+                                    headers:{
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+                                            username,
+                                            password
+                                        })
+                                }
+                            );
+
+
+                        const result =
+                            await response.json();
+
+
+                        if(!response.ok){
+
+                            throw new Error(
+                                result.error ||
+                                "Invalid username or password."
+                            );
+
+                        }
+
+
+                        document
+                            .getElementById(
+                                "loginScreen"
+                            )
+                            .classList.add(
+                                "hidden"
+                            );
+
+
+                        document
+                            .getElementById(
+                                "adminApp"
+                            )
+                            .classList.add(
+                                "visible"
+                            );
+
+
+                        await initializeAdmin();
+
+                    }
+                    catch(error){
+
+                        console.error(error);
+
+
+                        errorBox.textContent =
+                            error.message ||
+                            "Login failed.";
+
+
+                        errorBox.classList.add(
+                            "show"
+                        );
+
+                    }
+                    finally{
+
+                        button.disabled =
+                            false;
+
+                        button.textContent =
+                            "Login";
+
+                    }
+
+                }
+            );
+
+
+
+        async function checkAdminSession(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/admin/me`
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(
+                    response.ok &&
+                    result.authenticated
+                ){
+
+                    document
+                        .getElementById(
+                            "loginScreen"
+                        )
+                        .classList.add(
+                            "hidden"
+                        );
+
+
+                    document
+                        .getElementById(
+                            "adminApp"
+                        )
+                        .classList.add(
+                            "visible"
+                        );
+
+
+                    await initializeAdmin();
+
+                }
+
+            }
+            catch(error){
+
+                console.error(
+                    "Could not check admin session:",
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        async function logoutAdmin(){
+
+            try{
+
+                await apiFetch(
+                    `${API_BASE}/admin/logout`,
+                    {
+                        method:"POST"
+                    }
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+            }
+
+
+            location.reload();
+
+        }
+
+
+
+        /* ==============================
+           IMAGE HELPERS
+        ============================== */
+
+        function getImageUrl(
+            image
+        ){
+
+            if(!image){
+
+                return "";
+
+            }
+
+
+            if(
+                image.startsWith("data:") ||
+                image.startsWith("http://") ||
+                image.startsWith("https://")
+            ){
+
+                return image;
+
+            }
+
+
+            if(image.startsWith("/")){
+
+                return API_ORIGIN + image;
+
+            }
+
+
+            return image;
+
+        }
+
+
+
+        async function uploadFile(
+            file
+        ){
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                file
+            );
+
+
+            const response =
+                await apiFetch(
+                    `${API_BASE}/upload`,
+                    {
+                        method:"POST",
+                        body:formData
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    result.error ||
+                    "Could not upload image."
+                );
+
+            }
+
+
+            return result.url;
+
+        }
+
+
+
+        /* ==============================
+           LOAD DATA
+        ============================== */
+
+        async function loadProductsFromAPI(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/products`
+                    );
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Could not load products."
+                    );
+
+                }
+
+
+                products =
+                    await response.json();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    "Could not connect to the product database."
+                );
+
+            }
+
+        }
+
+
+
+        async function loadCategoriesFromAPI(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/categories`
+                    );
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Could not load categories."
+                    );
+
+                }
+
+
+                categories =
+                    await response.json();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    "Could not connect to the category database."
+                );
+
+            }
+
+        }
+
+
+
+        async function loadOrdersFromAPI(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/orders`
+                    );
+
+
+                if(response.status === 401){
+
+                    throw new Error(
+                        "Admin authentication required."
+                    );
+
+                }
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Could not load orders."
+                    );
+
+                }
+
+
+                orders =
+                    await response.json();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Could not connect to the order database."
+                );
+
+            }
+
+        }
+
+
+
+        async function loadBookingsFromAPI(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/bookings`
+                    );
+
+
+                if(response.status === 401){
+
+                    throw new Error(
+                        "Admin authentication required."
+                    );
+
+                }
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Could not load bookings."
+                    );
+
+                }
+
+
+                bookings =
+                    await response.json();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Could not connect to the booking database."
+                );
+
+            }
+
+        }
+
+
+
+        async function loadReviewsFromAPI(){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/reviews`
+                    );
+
+
+                if(response.status === 401){
+
+                    throw new Error(
+                        "Admin authentication required."
+                    );
+
+                }
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        "Could not load reviews."
+                    );
+
+                }
+
+
+                reviews =
+                    await response.json();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Could not connect to the review database."
+                );
+
+            }
+
+        }
+
+
+
+        async function refreshAdminData(){
+
+            const button =
+                document.querySelector(
+                    ".refresh-btn"
+                );
+
+
+            button.disabled = true;
+
+            button.textContent =
+                "Refreshing...";
+
+
+            try{
+
+                await Promise.all([
+                    loadProductsFromAPI(),
+                    loadCategoriesFromAPI(),
+                    loadOrdersFromAPI(),
+                    loadBookingsFromAPI(),
+                    loadReviewsFromAPI()
+                ]);
+
+
+                displayProducts();
+
+                displayCategories();
+
+                displayOrders();
+
+                displayBookings();
+
+                displayReviews();
+
+                updateCategoryDropdown();
+
+                updateDashboard();
+
+            }
+            finally{
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Refresh Data";
+
+            }
+
+        }
+
+
+
+        /* ==============================
+           NAVIGATION
+        ============================== */
+
+        function showSection(
+            sectionId,
+            button
+        ){
+
+            document
+                .querySelectorAll(".section")
+                .forEach(section => {
+
+                    section.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+            document
+                .getElementById(sectionId)
+                .classList.add("active");
+
+
+            document
+                .querySelectorAll(
+                    ".sidebar button"
+                )
+                .forEach(btn => {
+
+                    btn.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+            if(button){
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+
+
+
+        /* ==============================
+           DASHBOARD
+        ============================== */
+
+        function updateDashboard(){
+
+            document.getElementById(
+                "productCount"
+            ).textContent =
+                products.length;
+
+
+            document.getElementById(
+                "orderCount"
+            ).textContent =
+                orders.length;
+
+
+            document.getElementById(
+                "bookingCount"
+            ).textContent =
+                bookings.length;
+
+
+            document.getElementById(
+                "reviewCount"
+            ).textContent =
+                reviews.length;
+
+
+            document.getElementById(
+                "categoryCount"
+            ).textContent =
+                categories.length;
+
+        }
+
+
+
+        /* ==============================
+           PRODUCTS
+        ============================== */
+
+        function displayProducts(){
+
+            const tbody =
+                document.getElementById(
+                    "productsTableBody"
+                );
+
+
+            if(!products.length){
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-state"
+                        >
+                            No products yet.
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                products.map(product => {
+
+                    const image =
+                        product.images &&
+                        product.images.length
+                        ?
+                        getImageUrl(
+                            product.images[0]
+                        )
+                        :
+                        "";
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+
+                                ${
+                                    image
+                                    ?
+                                    `<img
+                                        src="${image}"
+                                        class="product-thumb"
+                                        alt="${product.name}"
+                                    >`
+                                    :
+                                    "No image"
+                                }
+
+                            </td>
+
+
+                            <td>
+                                ${product.name}
+                            </td>
+
+
+                            <td>
+                                ${product.category}
+                            </td>
+
+
+                            <td>
+                                ₦${Number(
+                                    product.price
+                                ).toLocaleString()}
+                            </td>
+
+
+                            <td>
+                                <span class="featured-badge ${product.featured ? "yes" : "no"}">
+                                    ${product.featured ? "Featured" : "Not Featured"}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="action-btn edit-btn"
+                                    onclick="editProduct('${product.id}')"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteProduct('${product.id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+
+
+
+        function updateCategoryDropdown(){
+
+            const select =
+                document.getElementById(
+                    "productCategory"
+                );
+
+
+            select.innerHTML =
+                `<option value="">Select Category</option>`;
+
+
+            categories.forEach(category => {
+
+                select.innerHTML += `
+
+                    <option value="${category.name}">
+                        ${category.name}
+                    </option>
+
+                `;
+
+            });
+
+        }
+
+
+
+        function openProductModal(
+            productId = null
+        ){
+
+            const modal =
+                document.getElementById(
+                    "productModal"
+                );
+
+
+            const form =
+                document.getElementById(
+                    "productForm"
+                );
+
+
+            form.reset();
+
+
+            document.getElementById(
+                "productFeatured"
+            ).checked = false;
+
+
+            pendingProductFiles = [];
+
+
+            document.getElementById(
+                "editingProductId"
+            ).value =
+                productId || "";
+
+
+            document.getElementById(
+                "imagePreviewContainer"
+            ).innerHTML = "";
+
+
+            document.getElementById(
+                "specificationsContainer"
+            ).innerHTML = "";
+
+
+            updateCategoryDropdown();
+
+
+            if(productId){
+
+                const product =
+                    products.find(
+                        item =>
+                            item.id === productId
+                    );
+
+
+                if(!product){
+
+                    return;
+
+                }
+
+
+                document.getElementById(
+                    "productModalTitle"
+                ).textContent =
+                    "Edit Product";
+
+
+                document.getElementById(
+                    "productName"
+                ).value =
+                    product.name;
+
+
+                document.getElementById(
+                    "productPrice"
+                ).value =
+                    product.price;
+
+
+                document.getElementById(
+                    "productCategory"
+                ).value =
+                    product.category;
+
+
+                document.getElementById(
+                    "productDescription"
+                ).value =
+                    product.description || "";
+
+
+                document.getElementById(
+                    "productFeatured"
+                ).checked =
+                    Boolean(product.featured);
+
+
+                if(product.images){
+
+                    product.images.forEach(
+                        image =>
+                            addImagePreview(
+                                image,
+                                false
+                            )
+                    );
+
+                }
+
+
+                if(product.specifications){
+
+                    Object.entries(
+                        product.specifications
+                    ).forEach(
+                        ([key,value]) => {
+
+                            addSpecification(
+                                key,
+                                value
+                            );
+
+                        }
+                    );
+
+                }
+
+            }
+            else{
+
+                document.getElementById(
+                    "productModalTitle"
+                ).textContent =
+                    "Add Product";
+
+
+                addSpecification();
+
+            }
+
+
+            modal.classList.add(
+                "active"
+            );
+
+        }
+
+
+
+        function closeProductModal(){
+
+            document
+                .getElementById(
+                    "productModal"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+
+            pendingProductFiles = [];
+
+        }
+
+
+
+        function addSpecification(
+            key = "",
+            value = ""
+        ){
+
+            const container =
+                document.getElementById(
+                    "specificationsContainer"
+                );
+
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.className =
+                "spec-row";
+
+
+            row.innerHTML = `
+
+                <input
+                    type="text"
+                    placeholder="Specification"
+                    value="${key}"
+                    class="spec-key"
+                >
+
+
+                <input
+                    type="text"
+                    placeholder="Value"
+                    value="${value}"
+                    class="spec-value"
+                >
+
+
+                <button
+                    type="button"
+                    class="remove-spec"
+                    onclick="this.parentElement.remove()"
+                >
+                    Remove
+                </button>
+
+            `;
+
+
+            container.appendChild(
+                row
+            );
+
+        }
+
+
+
+        function addImagePreview(
+            image,
+            isNewFile = false
+        ){
+
+            const container =
+                document.getElementById(
+                    "imagePreviewContainer"
+                );
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "preview-item";
+
+
+            item.dataset.image =
+                image;
+
+
+            item.dataset.newFile =
+                isNewFile
+                ?
+                "true"
+                :
+                "false";
+
+
+            item.innerHTML = `
+
+                <img
+                    src="${getImageUrl(image)}"
+                    alt="Product image"
+                >
+
+
+                <button
+                    type="button"
+                    class="remove-image"
+                >
+                    ×
+                </button>
+
+            `;
+
+
+            item
+                .querySelector(
+                    ".remove-image"
+                )
+                .addEventListener(
+                    "click",
+                    function(){
+
+                        if(
+                            item.dataset.newFile ===
+                            "true"
+                        ){
+
+                            const index =
+                                Number(
+                                    item.dataset.fileIndex
+                                );
+
+
+                            if(
+                                !isNaN(index)
+                            ){
+
+                                pendingProductFiles[index] =
+                                    null;
+
+                            }
+
+                        }
+
+
+                        item.remove();
+
+                    }
+                );
+
+
+            container.appendChild(
+                item
+            );
+
+
+            return item;
+
+        }
+
+
+
+        document
+            .getElementById(
+                "productImages"
+            )
+            .addEventListener(
+                "change",
+                function(){
+
+                    const files =
+                        Array.from(
+                            this.files
+                        );
+
+
+                    files.forEach(file => {
+
+                        if(
+                            !file.type.startsWith(
+                                "image/"
+                            )
+                        ){
+
+                            return;
+
+                        }
+
+
+                        const fileIndex =
+                            pendingProductFiles.length;
+
+
+                        pendingProductFiles.push(
+                            file
+                        );
+
+
+                        const reader =
+                            new FileReader();
+
+
+                        reader.onload =
+                            function(event){
+
+                                const item =
+                                    addImagePreview(
+                                        event.target.result,
+                                        true
+                                    );
+
+
+                                item.dataset.fileIndex =
+                                    fileIndex;
+
+                            };
+
+
+                        reader.readAsDataURL(
+                            file
+                        );
+
+                    });
+
+
+                    this.value = "";
+
+                }
+            );
+
+
+
+        document
+            .getElementById(
+                "productForm"
+            )
+            .addEventListener(
+                "submit",
+                async function(event){
+
+                    event.preventDefault();
+
+
+                    const submitButton =
+                        this.querySelector(
+                            'button[type="submit"]'
+                        );
+
+
+                    submitButton.disabled =
+                        true;
+
+
+                    submitButton.textContent =
+                        "Saving...";
+
+
+                    try{
+
+                        const editingId =
+                            document.getElementById(
+                                "editingProductId"
+                            ).value;
+
+
+                        const name =
+                            document.getElementById(
+                                "productName"
+                            ).value.trim();
+
+
+                        const price =
+                            Number(
+                                document.getElementById(
+                                    "productPrice"
+                                ).value
+                            );
+
+
+                        const category =
+                            document.getElementById(
+                                "productCategory"
+                            ).value;
+
+
+                        const description =
+                            document.getElementById(
+                                "productDescription"
+                            ).value.trim();
+
+
+                        const existingImages =
+                            Array.from(
+                                document.querySelectorAll(
+                                    "#imagePreviewContainer .preview-item"
+                                )
+                            )
+                            .filter(
+                                item =>
+                                    item.dataset.newFile !==
+                                    "true"
+                            )
+                            .map(
+                                item =>
+                                    item.dataset.image
+                            );
+
+
+                        const filesToUpload =
+                            pendingProductFiles.filter(
+                                file =>
+                                    file !== null
+                            );
+
+
+                        let uploadedImages = [];
+
+
+                        for(
+                            const file
+                            of filesToUpload
+                        ){
+
+                            const uploadedUrl =
+                                await uploadFile(
+                                    file
+                                );
+
+
+                            uploadedImages.push(
+                                uploadedUrl
+                            );
+
+                        }
+
+
+                        const images = [
+                            ...existingImages,
+                            ...uploadedImages
+                        ];
+
+
+                        const specifications = {};
+
+
+                        document
+                            .querySelectorAll(
+                                ".spec-row"
+                            )
+                            .forEach(row => {
+
+                                const key =
+                                    row
+                                        .querySelector(
+                                            ".spec-key"
+                                        )
+                                        .value.trim();
+
+
+                                const value =
+                                    row
+                                        .querySelector(
+                                            ".spec-value"
+                                        )
+                                        .value.trim();
+
+
+                                if(key){
+
+                                    specifications[key] =
+                                        value;
+
+                                }
+
+                            });
+
+
+                        if(!images.length){
+
+                            throw new Error(
+                                "Please add at least one product image."
+                            );
+
+                        }
+
+
+                        const productData = {
+
+                            name,
+                            price,
+                            category,
+                            description,
+                            images,
+                            specifications,
+                            featured: document.getElementById(
+                                "productFeatured"
+                            ).checked
+
+                        };
+
+
+                        let response;
+
+
+                        if(editingId){
+
+                            response =
+                                await apiFetch(
+                                    `${API_BASE}/products/${encodeURIComponent(editingId)}`,
+                                    {
+                                        method:"PUT",
+
+                                        headers:{
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify(
+                                                productData
+                                            )
+                                    }
+                                );
+
+                        }
+                        else{
+
+                            let baseId =
+                                name
+                                    .toLowerCase()
+                                    .replace(
+                                        /[^a-z0-9]+/g,
+                                        "-"
+                                    )
+                                    .replace(
+                                        /^-|-$/g,
+                                        ""
+                                    );
+
+
+                            let newId =
+                                baseId;
+
+
+                            let counter =
+                                1;
+
+
+                            while(
+                                products.some(
+                                    product =>
+                                        product.id === newId
+                                )
+                            ){
+
+                                newId =
+                                    `${baseId}-${counter}`;
+
+                                counter++;
+
+                            }
+
+
+                            response =
+                                await apiFetch(
+                                    `${API_BASE}/products`,
+                                    {
+                                        method:"POST",
+
+                                        headers:{
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+                                                id:newId,
+                                                ...productData
+                                            })
+                                    }
+                                );
+
+                        }
+
+
+                        const result =
+                            await response.json();
+
+
+                        if(!response.ok){
+
+                            throw new Error(
+                                result.error ||
+                                "Could not save product."
+                            );
+
+                        }
+
+
+                        await loadProductsFromAPI();
+
+
+                        displayProducts();
+
+                        updateCategoryDropdown();
+
+                        updateDashboard();
+
+
+                        closeProductModal();
+
+
+                        alert(
+                            editingId
+                            ?
+                            "Product updated successfully."
+                            :
+                            "Product added successfully."
+                        );
+
+                    }
+                    catch(error){
+
+                        console.error(error);
+
+                        alert(
+                            error.message ||
+                            "Something went wrong while saving the product."
+                        );
+
+                    }
+                    finally{
+
+                        submitButton.disabled =
+                            false;
+
+                        submitButton.textContent =
+                            "Save Product";
+
+                    }
+
+                }
+            );
+
+
+
+        function editProduct(id){
+
+            openProductModal(id);
+
+        }
+
+
+
+        async function deleteProduct(id){
+
+            const product =
+                products.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!product){
+
+                return;
+
+            }
+
+
+            if(
+                !confirm(
+                    `Are you sure you want to delete "${product.name}"?`
+                )
+            ){
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/products/${encodeURIComponent(id)}`,
+                        {
+                            method:"DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not delete product."
+                    );
+
+                }
+
+
+                await loadProductsFromAPI();
+
+
+                displayProducts();
+
+                updateDashboard();
+
+
+                alert(
+                    "Product deleted successfully."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while deleting the product."
+                );
+
+            }
+
+        }
+
+
+
+        /* ==============================
+           CATEGORIES
+        ============================== */
+
+        function displayCategories(){
+
+            const grid =
+                document.getElementById(
+                    "categoriesGrid"
+                );
+
+
+            if(!categories.length){
+
+                grid.innerHTML = `
+
+                    <div class="empty-state">
+                        No categories yet.
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            grid.innerHTML =
+                categories.map(
+                    category => {
+
+                        const image =
+                            getImageUrl(
+                                category.image
+                            );
+
+
+                        return `
+
+                            <div class="category-card">
+
+                                ${
+                                    image
+                                    ?
+                                    `<img
+                                        src="${image}"
+                                        alt="${category.name}"
+                                    >`
+                                    :
+                                    `<div
+                                        style="
+                                            height:180px;
+                                            background:#F8F1F4;
+                                            display:flex;
+                                            align-items:center;
+                                            justify-content:center;
+                                            color:#777;
+                                        "
+                                    >
+                                        No image
+                                    </div>`
+                                }
+
+
+                                <div class="category-content">
+
+                                    <h3>
+                                        ${category.name}
+                                    </h3>
+
+
+                                    <button
+                                        class="action-btn edit-btn"
+                                        onclick="editCategory('${category.id}')"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        class="action-btn delete-btn"
+                                        onclick="deleteCategory('${category.id}')"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+
+
+        function openCategoryModal(
+            id = null
+        ){
+
+            document
+                .getElementById(
+                    "categoryForm"
+                )
+                .reset();
+
+
+            document.getElementById(
+                "editingCategoryId"
+            ).value =
+                id || "";
+
+
+            pendingCategoryFile =
+                null;
+
+
+            categoryImageData = "";
+
+
+            document.getElementById(
+                "categoryImagePreview"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "categoryPreviewImage"
+            ).src = "";
+
+
+            if(id){
+
+                const category =
+                    categories.find(
+                        item =>
+                            item.id === id
+                    );
+
+
+                if(!category){
+
+                    return;
+
+                }
+
+
+                document.getElementById(
+                    "categoryModalTitle"
+                ).textContent =
+                    "Edit Category";
+
+
+                document.getElementById(
+                    "categoryName"
+                ).value =
+                    category.name;
+
+
+                categoryImageData =
+                    category.image || "";
+
+
+                if(categoryImageData){
+
+                    document.getElementById(
+                        "categoryPreviewImage"
+                    ).src =
+                        getImageUrl(
+                            categoryImageData
+                        );
+
+
+                    document.getElementById(
+                        "categoryImagePreview"
+                    ).style.display =
+                        "block";
+
+                }
+
+            }
+            else{
+
+                document.getElementById(
+                    "categoryModalTitle"
+                ).textContent =
+                    "Add Category";
+
+            }
+
+
+            document
+                .getElementById(
+                    "categoryModal"
+                )
+                .classList.add(
+                    "active"
+                );
+
+        }
+
+
+
+        function closeCategoryModal(){
+
+            document
+                .getElementById(
+                    "categoryModal"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+
+            categoryImageData = "";
+
+            pendingCategoryFile =
+                null;
+
+        }
+
+
+
+        document
+            .getElementById(
+                "categoryImage"
+            )
+            .addEventListener(
+                "change",
+                function(){
+
+                    const file =
+                        this.files[0];
+
+
+                    if(!file){
+
+                        return;
+
+                    }
+
+
+                    if(
+                        !file.type.startsWith(
+                            "image/"
+                        )
+                    ){
+
+                        alert(
+                            "Please select an image file."
+                        );
+
+                        this.value = "";
+
+                        return;
+
+                    }
+
+
+                    pendingCategoryFile =
+                        file;
+
+
+                    const reader =
+                        new FileReader();
+
+
+                    reader.onload =
+                        function(event){
+
+                            categoryImageData =
+                                event.target.result;
+
+
+                            document.getElementById(
+                                "categoryPreviewImage"
+                            ).src =
+                                categoryImageData;
+
+
+                            document.getElementById(
+                                "categoryImagePreview"
+                            ).style.display =
+                                "block";
+
+                        };
+
+
+                    reader.readAsDataURL(
+                        file
+                    );
+
+                }
+            );
+
+
+
+        document
+            .getElementById(
+                "categoryForm"
+            )
+            .addEventListener(
+                "submit",
+                async function(event){
+
+                    event.preventDefault();
+
+
+                    const submitButton =
+                        this.querySelector(
+                            'button[type="submit"]'
+                        );
+
+
+                    submitButton.disabled =
+                        true;
+
+
+                    submitButton.textContent =
+                        "Saving...";
+
+
+                    try{
+
+                        const editingId =
+                            document.getElementById(
+                                "editingCategoryId"
+                            ).value;
+
+
+                        const name =
+                            document.getElementById(
+                                "categoryName"
+                            ).value.trim();
+
+
+                        if(!name){
+
+                            throw new Error(
+                                "Please enter a category name."
+                            );
+
+                        }
+
+
+                        let image =
+                            categoryImageData;
+
+
+                        if(
+                            pendingCategoryFile
+                        ){
+
+                            image =
+                                await uploadFile(
+                                    pendingCategoryFile
+                                );
+
+                        }
+
+
+                        if(!image){
+
+                            throw new Error(
+                                "Please choose a category image."
+                            );
+
+                        }
+
+
+                        let response;
+
+
+                        if(editingId){
+
+                            response =
+                                await apiFetch(
+                                    `${API_BASE}/categories/${encodeURIComponent(editingId)}`,
+                                    {
+                                        method:"PUT",
+
+                                        headers:{
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+                                                name,
+                                                image
+                                            })
+                                    }
+                                );
+
+                        }
+                        else{
+
+                            let baseId =
+                                name
+                                    .toLowerCase()
+                                    .replace(
+                                        /[^a-z0-9]+/g,
+                                        "-"
+                                    )
+                                    .replace(
+                                        /^-|-$/g,
+                                        ""
+                                    );
+
+
+                            let newId =
+                                baseId;
+
+
+                            let counter =
+                                1;
+
+
+                            while(
+                                categories.some(
+                                    category =>
+                                        category.id === newId
+                                )
+                            ){
+
+                                newId =
+                                    `${baseId}-${counter}`;
+
+                                counter++;
+
+                            }
+
+
+                            response =
+                                await apiFetch(
+                                    `${API_BASE}/categories`,
+                                    {
+                                        method:"POST",
+
+                                        headers:{
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+                                                id:newId,
+                                                name,
+                                                image
+                                            })
+                                    }
+                                );
+
+                        }
+
+
+                        const result =
+                            await response.json();
+
+
+                        if(!response.ok){
+
+                            throw new Error(
+                                result.error ||
+                                "Could not save category."
+                            );
+
+                        }
+
+
+                        await loadCategoriesFromAPI();
+
+                        await loadProductsFromAPI();
+
+
+                        displayCategories();
+
+                        updateCategoryDropdown();
+
+                        displayProducts();
+
+                        updateDashboard();
+
+
+                        closeCategoryModal();
+
+
+                        alert(
+                            editingId
+                            ?
+                            "Category updated successfully."
+                            :
+                            "Category added successfully."
+                        );
+
+                    }
+                    catch(error){
+
+                        console.error(error);
+
+                        alert(
+                            error.message ||
+                            "Something went wrong while saving the category."
+                        );
+
+                    }
+                    finally{
+
+                        submitButton.disabled =
+                            false;
+
+                        submitButton.textContent =
+                            "Save Category";
+
+                    }
+
+                }
+            );
+
+
+
+        function editCategory(id){
+
+            openCategoryModal(id);
+
+        }
+
+
+
+        async function deleteCategory(id){
+
+            const category =
+                categories.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!category){
+
+                return;
+
+            }
+
+
+            if(
+                !confirm(
+                    `Delete "${category.name}"?`
+                )
+            ){
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/categories/${encodeURIComponent(id)}`,
+                        {
+                            method:"DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not delete category."
+                    );
+
+                }
+
+
+                await loadCategoriesFromAPI();
+
+                await loadProductsFromAPI();
+
+
+                displayCategories();
+
+                updateCategoryDropdown();
+
+                displayProducts();
+
+                updateDashboard();
+
+
+                alert(
+                    "Category deleted successfully."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while deleting the category."
+                );
+
+            }
+
+        }
+
+
+
+        /* ==============================
+           ORDERS
+        ============================== */
+
+        function displayOrders(){
+
+            const tbody =
+                document.getElementById(
+                    "ordersTableBody"
+                );
+
+
+            if(!orders.length){
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="empty-state"
+                        >
+                            No orders yet.
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                orders.map(order => {
+
+                    const customer =
+                        order.customer || {};
+
+
+                    const status =
+                        order.status ||
+                        "Pending";
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${order.id || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${customer.name || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${customer.phone || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ₦${Number(
+                                    order.total || 0
+                                ).toLocaleString()}
+                            </td>
+
+
+                            <td>
+
+                                <select
+                                    class="status-select"
+                                    onchange="updateOrderStatus('${order.id}',this.value)"
+                                >
+
+                                    ${getOrderStatusOptions(status)}
+
+                                </select>
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="action-btn view-btn"
+                                    onclick="viewOrder('${order.id}')"
+                                >
+                                    View
+                                </button>
+
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteOrder('${order.id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+
+
+
+        function getOrderStatusOptions(
+            current
+        ){
+
+            const statuses = [
+                "Pending",
+                "Confirmed",
+                "Processing",
+                "Shipped",
+                "Completed",
+                "Cancelled"
+            ];
+
+
+            return statuses.map(status => `
+
+                <option
+                    value="${status}"
+                    ${status === current ? "selected" : ""}
+                >
+                    ${status}
+                </option>
+
+            `).join("");
+
+        }
+
+
+
+        async function updateOrderStatus(
+            id,
+            status
+        ){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/orders/${encodeURIComponent(id)}`,
+                        {
+                            method:"PUT",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    status:status
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update order status."
+                    );
+
+                }
+
+
+                const order =
+                    orders.find(
+                        item =>
+                            item.id === id
+                    );
+
+
+                if(order){
+
+                    order.status =
+                        status;
+
+                }
+
+
+                displayOrders();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while updating the order."
+                );
+
+
+                await loadOrdersFromAPI();
+
+                displayOrders();
+
+            }
+
+        }
+
+
+
+        function viewOrder(id){
+
+            const order =
+                orders.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!order){
+
+                return;
+
+            }
+
+
+            const customer =
+                order.customer || {};
+
+
+            const items =
+                order.items || [];
+
+
+            document.getElementById(
+                "orderDetails"
+            ).innerHTML = `
+
+                <div class="booking-info">
+
+                    <div class="info-box">
+
+                        <strong>Order ID</strong>
+
+                        <span>
+                            ${order.id || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Status</strong>
+
+                        <span>
+                            ${order.status || "Pending"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Customer</strong>
+
+                        <span>
+                            ${customer.name || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Phone</strong>
+
+                        <span>
+                            ${customer.phone || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Email</strong>
+
+                        <span>
+                            ${customer.email || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Delivery Option</strong>
+
+                        <span>
+                            ${order.deliveryOption || "N/A"}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="booking-note">
+
+                    <strong>Address</strong>
+
+                    ${customer.address || "No address provided."}
+
+                </div>
+
+
+                <h3
+                    style="
+                        color:#5C2748;
+                        margin-bottom:15px;
+                    "
+                >
+                    Items
+                </h3>
+
+
+                ${
+                    items.length
+                    ?
+                    items.map(item => `
+
+                        <div
+                            style="
+                                display:flex;
+                                gap:15px;
+                                align-items:center;
+                                margin-bottom:15px;
+                                padding-bottom:15px;
+                                border-bottom:1px solid #eee;
+                            "
+                        >
+
+                            ${
+                                item.image
+                                ?
+                                `
+                                    <img
+                                        src="${getImageUrl(item.image)}"
+                                        style="
+                                            width:70px;
+                                            height:70px;
+                                            object-fit:cover;
+                                            border-radius:7px;
+                                        "
+                                        alt="${item.name}"
+                                    >
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <div>
+
+                                <strong>
+                                    ${item.name}
+                                </strong>
+
+
+                                <p>
+                                    Quantity:
+                                    ${item.quantity}
+                                </p>
+
+
+                                <p>
+                                    ₦${Number(
+                                        item.price || 0
+                                    ).toLocaleString()}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    `).join("")
+                    :
+                    "<p>No items found.</p>"
+                }
+
+
+                <div class="booking-note">
+
+                    <strong>Total</strong>
+
+                    ₦${Number(
+                        order.total || 0
+                    ).toLocaleString()}
+
+                </div>
+
+
+                ${
+                    order.note
+                    ?
+                    `
+                        <div class="booking-note">
+
+                            <strong>Customer Note</strong>
+
+                            ${order.note}
+
+                        </div>
+                    `
+                    :
+                    ""
+                }
+
+            `;
+
+
+            document
+                .getElementById(
+                    "orderModal"
+                )
+                .classList.add(
+                    "active"
+                );
+
+        }
+
+
+
+        function closeOrderModal(){
+
+            document
+                .getElementById(
+                    "orderModal"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+        }
+
+
+
+        async function deleteOrder(id){
+
+            if(
+                !confirm(
+                    "Are you sure you want to delete this order?"
+                )
+            ){
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/orders/${encodeURIComponent(id)}`,
+                        {
+                            method:"DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not delete order."
+                    );
+
+                }
+
+
+                orders =
+                    orders.filter(
+                        order =>
+                            order.id !== id
+                    );
+
+
+                displayOrders();
+
+                updateDashboard();
+
+
+                alert(
+                    "Order deleted successfully."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while deleting the order."
+                );
+
+            }
+
+        }
+
+
+
+        /* ==============================
+           BOOKINGS
+        ============================== */
+
+        function displayBookings(){
+
+            const tbody =
+                document.getElementById(
+                    "bookingsTableBody"
+                );
+
+
+            if(!bookings.length){
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty-state"
+                        >
+                            No bookings yet.
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                bookings.map(booking => {
+
+                    const customer =
+                        booking.customer || {};
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${booking.id || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${customer.name || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${customer.phone || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${booking.service || "N/A"}
+                            </td>
+
+
+                            <td>
+                                ${formatBookingDate(
+                                    booking.preferredDate
+                                )}
+                            </td>
+
+
+                            <td>
+
+                                <select
+                                    class="status-select"
+                                    onchange="updateBookingStatus('${booking.id}',this.value)"
+                                >
+
+                                    ${getBookingStatusOptions(
+                                        booking.status ||
+                                        "Pending"
+                                    )}
+
+                                </select>
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="action-btn view-btn"
+                                    onclick="viewBooking('${booking.id}')"
+                                >
+                                    View
+                                </button>
+
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteBooking('${booking.id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+
+
+
+        function getBookingStatusOptions(
+            current
+        ){
+
+            const statuses = [
+                "Pending",
+                "Confirmed",
+                "Completed",
+                "Cancelled"
+            ];
+
+
+            return statuses.map(status => `
+
+                <option
+                    value="${status}"
+                    ${status === current ? "selected" : ""}
+                >
+                    ${status}
+                </option>
+
+            `).join("");
+
+        }
+
+
+
+        async function updateBookingStatus(
+            id,
+            status
+        ){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/bookings/${encodeURIComponent(id)}`,
+                        {
+                            method:"PUT",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    status:status
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update booking status."
+                    );
+
+                }
+
+
+                const booking =
+                    bookings.find(
+                        item =>
+                            item.id === id
+                    );
+
+
+                if(booking){
+
+                    booking.status =
+                        status;
+
+                }
+
+
+                displayBookings();
+
+                updateDashboard();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while updating the booking."
+                );
+
+
+                await loadBookingsFromAPI();
+
+                displayBookings();
+
+            }
+
+        }
+
+
+
+        function viewBooking(id){
+
+            const booking =
+                bookings.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!booking){
+
+                return;
+
+            }
+
+
+            const customer =
+                booking.customer || {};
+
+
+            const inspiration =
+                booking.inspirationImage ||
+                booking.inspirationPhoto ||
+                booking.inspirationFile ||
+                "";
+
+
+            const isImage =
+                typeof inspiration === "string" &&
+                (
+                    inspiration.startsWith(
+                        "data:image/"
+                    ) ||
+                    inspiration.startsWith(
+                        "http://"
+                    ) ||
+                    inspiration.startsWith(
+                        "https://"
+                    ) ||
+                    inspiration.startsWith(
+                        "images/"
+                    ) ||
+                    inspiration.startsWith(
+                        "/uploads/"
+                    )
+                );
+
+
+            let inspirationHTML;
+
+
+            if(isImage){
+
+                inspirationHTML = `
+
+                    <div class="inspiration-section">
+
+                        <h3>
+                            Inspiration Photo
+                        </h3>
+
+
+                        <img
+                            src="${getImageUrl(inspiration)}"
+                            alt="Customer inspiration"
+                            class="inspiration-image"
+                        >
+
+                    </div>
+
+                `;
+
+            }
+            else{
+
+                inspirationHTML = `
+
+                    <div class="inspiration-section">
+
+                        <h3>
+                            Inspiration Photo
+                        </h3>
+
+
+                        <div class="no-image">
+
+                            No inspiration photo was uploaded.
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            document.getElementById(
+                "bookingDetails"
+            ).innerHTML = `
+
+                <div class="booking-info">
+
+                    <div class="info-box">
+
+                        <strong>Booking ID</strong>
+
+                        <span>
+                            ${booking.id || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Status</strong>
+
+                        <span>
+                            ${booking.status || "Pending"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Customer Name</strong>
+
+                        <span>
+                            ${customer.name || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Phone</strong>
+
+                        <span>
+                            ${customer.phone || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Email</strong>
+
+                        <span>
+                            ${customer.email || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Service</strong>
+
+                        <span>
+                            ${booking.service || "N/A"}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Preferred Date</strong>
+
+                        <span>
+                            ${formatBookingDate(
+                                booking.preferredDate
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <strong>Preferred Time</strong>
+
+                        <span>
+                            ${booking.preferredTime || "N/A"}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="booking-note">
+
+                    <strong>
+                        Customer Request
+                    </strong>
+
+                    ${
+                        booking.note ||
+                        booking.message ||
+                        "No additional request provided."
+                    }
+
+                </div>
+
+
+                ${inspirationHTML}
+
+            `;
+
+
+            document
+                .getElementById(
+                    "bookingModal"
+                )
+                .classList.add(
+                    "active"
+                );
+
+        }
+
+
+
+        async function deleteBooking(id){
+
+            if(
+                !confirm(
+                    "Are you sure you want to delete this booking?"
+                )
+            ){
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/bookings/${encodeURIComponent(id)}`,
+                        {
+                            method:"DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not delete booking."
+                    );
+
+                }
+
+
+                bookings =
+                    bookings.filter(
+                        booking =>
+                            booking.id !== id
+                    );
+
+
+                displayBookings();
+
+                updateDashboard();
+
+
+                alert(
+                    "Booking deleted successfully."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while deleting the booking."
+                );
+
+            }
+
+        }
+
+
+
+        function formatBookingDate(
+            date
+        ){
+
+            if(!date){
+
+                return "N/A";
+
+            }
+
+
+            const parsed =
+                new Date(date);
+
+
+            if(
+                isNaN(
+                    parsed.getTime()
+                )
+            ){
+
+                return date;
+
+            }
+
+
+            return parsed.toLocaleDateString(
+                "en-NG",
+                {
+                    day:"numeric",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+
+        }
+
+
+
+        function closeBookingModal(){
+
+            document
+                .getElementById(
+                    "bookingModal"
+                )
+                .classList.remove(
+                    "active"
+                );
+
+        }
+
+
+
+        /* ==============================
+           REVIEWS
+        ============================== */
+
+        function displayReviews(){
+
+            const tbody =
+                document.getElementById(
+                    "reviewsTableBody"
+                );
+
+
+            if(!reviews.length){
+
+                tbody.innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty-state"
+                        >
+                            No reviews yet.
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                reviews.map(review => {
+
+                    const product =
+                        products.find(
+                            item =>
+                                item.id ===
+                                review.productId
+                        );
+
+
+                    const productName =
+                        product
+                        ?
+                        product.name
+                        :
+                        "Unknown Product";
+
+
+                    const rating =
+                        Number(
+                            review.rating || 0
+                        );
+
+
+                    const safeRating =
+                        Math.min(
+                            5,
+                            Math.max(
+                                0,
+                                rating
+                            )
+                        );
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${productName}
+                            </td>
+
+
+                            <td>
+                                ${review.name || "Anonymous"}
+                            </td>
+
+
+                            <td>
+
+                                <span class="review-stars">
+
+                                    ${"★".repeat(
+                                        safeRating
+                                    )}
+
+                                    ${"☆".repeat(
+                                        5 - safeRating
+                                    )}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="review-comment">
+                                    ${review.comment || ""}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="review-date">
+                                    ${formatReviewDate(
+                                        review.date
+                                    )}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <select
+                                    class="status-select"
+                                    onchange="updateReviewStatus('${review.id}',this.value)"
+                                >
+
+                                    ${getReviewStatusOptions(
+                                        review.status || "Approved"
+                                    )}
+
+                                </select>
+
+                            </td>
+
+
+                            <td>
+
+                                <button
+                                    class="action-btn delete-btn"
+                                    onclick="deleteReview('${review.id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+
+
+
+        function getReviewStatusOptions(
+            current
+        ){
+
+            const statuses = [
+                "Approved",
+                "Pending",
+                "Hidden"
+            ];
+
+
+            return statuses.map(status => `
+
+                <option
+                    value="${status}"
+                    ${status === current ? "selected" : ""}
+                >
+                    ${status}
+                </option>
+
+            `).join("");
+
+        }
+
+
+
+        async function updateReviewStatus(
+            id,
+            status
+        ){
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/reviews/${encodeURIComponent(id)}`,
+                        {
+                            method:"PUT",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    status:status
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update review status."
+                    );
+
+                }
+
+
+                const review =
+                    reviews.find(
+                        item =>
+                            item.id === id
+                    );
+
+
+                if(review){
+
+                    review.status =
+                        status;
+
+                }
+
+
+                displayReviews();
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while updating the review."
+                );
+
+
+                await loadReviewsFromAPI();
+
+                displayReviews();
+
+            }
+
+        }
+
+
+
+        async function deleteReview(
+            id
+        ){
+
+            if(
+                !confirm(
+                    "Are you sure you want to delete this review?"
+                )
+            ){
+
+                return;
+
+            }
+
+
+            try{
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE}/reviews/${encodeURIComponent(id)}`,
+                        {
+                            method:"DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Could not delete this review."
+                    );
+
+                }
+
+
+                reviews =
+                    reviews.filter(
+                        review =>
+                            review.id !== id
+                    );
+
+
+                displayReviews();
+
+                updateDashboard();
+
+
+                alert(
+                    "Review deleted successfully."
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Something went wrong while deleting the review."
+                );
+
+            }
+
+        }
+
+
+
+        function formatReviewDate(
+            date
+        ){
+
+            if(!date){
+
+                return "N/A";
+
+            }
+
+
+            const parsed =
+                new Date(date);
+
+
+            if(
+                isNaN(
+                    parsed.getTime()
+                )
+            ){
+
+                return date;
+
+            }
+
+
+            return parsed.toLocaleDateString(
+                "en-NG",
+                {
+                    day:"numeric",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+
+        }
+
+
+
+        /* ==============================
+           MODAL HANDLING
+        ============================== */
+
+        function closeAllModals(){
+
+            document
+                .querySelectorAll(".modal")
+                .forEach(modal => {
+
+                    modal.classList.remove(
+                        "active"
+                    );
+
+                });
+
+        }
+
+
+
+        window.addEventListener(
+            "click",
+            function(event){
+
+                document
+                    .querySelectorAll(".modal")
+                    .forEach(modal => {
+
+                        if(
+                            event.target === modal
+                        ){
+
+                            modal.classList.remove(
+                                "active"
+                            );
+
+                        }
+
+                    });
+
+            }
+        );
+
+
+
+        window.addEventListener(
+            "keydown",
+            function(event){
+
+                if(event.key === "Escape"){
+
+                    closeAllModals();
+
+                }
+
+            }
+        );
+
+
+
+        /* ==============================
+           INITIALIZE ADMIN
+        ============================== */
+
+        async function initializeAdmin(){
+
+            await loadProductsFromAPI();
+
+            await loadCategoriesFromAPI();
+
+            await loadOrdersFromAPI();
+
+            await loadBookingsFromAPI();
+
+            await loadReviewsFromAPI();
+
+
+            displayProducts();
+
+            displayCategories();
+
+            displayOrders();
+
+            displayBookings();
+
+            displayReviews();
+
+            updateCategoryDropdown();
+
+            updateDashboard();
+
+        }
+
+
+
+        checkAdminSession();
+
+    </script>
+
+
+</body>
+
+</html>
